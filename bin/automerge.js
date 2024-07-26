@@ -50,8 +50,6 @@ async function main() {
     logger.error("Invalid log level:", process.env.LOG);
   }
 
-  checkOldConfig();
-
   const token = env("GITHUB_TOKEN");
 
   const octokit = new Octokit({
