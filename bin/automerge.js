@@ -14,7 +14,7 @@ const pkg = require("../package.json");
 const OLD_CONFIG = [
   "MERGE_LABEL",
   "UPDATE_LABEL",
-  "LABELS",
+  // "LABELS",
   "AUTOMERGE",
   "AUTOREBASE",
   "COMMIT_MESSAGE_TEMPLATE",
