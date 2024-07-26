@@ -21,8 +21,6 @@ const OLD_CONFIG = [
   "TOKEN"
 ];
 
-const GITHUB_API_URL = process.env.GITHUB_API_URL || "https://api.github.com";
-
 async function main() {
   const parser = new ArgumentParser({
     prog: pkg.name,
@@ -53,9 +51,12 @@ async function main() {
   checkOldConfig();
 
   const token = env("GITHUB_TOKEN");
+  const baseUrl = process.env.GHE_HOSTNAME
+    ? "https://" + process.env.GHE_HOSTNAME + "/api/v3"
+    : "https://api.github.com";
 
   const octokit = new Octokit({
-    baseUrl: GITHUB_API_URL,
+    baseUrl,
     auth: `token ${token}`,
     userAgent: "pascalgn/automerge-action"
   });

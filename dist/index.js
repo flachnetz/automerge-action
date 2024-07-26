@@ -1443,11 +1443,13 @@ async function update(context, pullRequest) {
 
   let newSha;
 
+  const hostname = process.env.GHE_HOSTNAME || "github.com";
+
   if (updateMethod === "merge") {
     newSha = await merge(octokit, updateRetries, updateRetrySleep, pullRequest);
   } else if (updateMethod === "rebase") {
     const { full_name } = head.repo;
-    const url = `https://x-access-token:${token}@github.com/${full_name}.git`;
+    const url = `https://x-access-token:${token}@${hostname}/${full_name}.git`;
     newSha = await tmpdir(path => rebase(path, url, pullRequest));
   } else {
     throw new Error(`invalid update method: ${updateMethod}`);
@@ -40772,8 +40774,6 @@ const OLD_CONFIG = [
   "TOKEN"
 ];
 
-const GITHUB_API_URL = process.env.GITHUB_API_URL || "https://api.github.com";
-
 async function main() {
   const parser = new ArgumentParser({
     prog: pkg.name,
@@ -40804,9 +40804,12 @@ async function main() {
   checkOldConfig();
 
   const token = env("GITHUB_TOKEN");
+  const baseUrl = process.env.GHE_HOSTNAME
+    ? "https://" + process.env.GHE_HOSTNAME + "/api/v3"
+    : "https://api.github.com";
 
   const octokit = new Octokit({
-    baseUrl: GITHUB_API_URL,
+    baseUrl,
     auth: `token ${token}`,
     userAgent: "pascalgn/automerge-action"
   });
